@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 // import { createUser } from '../utils/API';
 import Auth from '../utils/auth';
 import {ADD_USER} from '../utils/mutations'
@@ -55,9 +55,14 @@ const SignupForm = () => {
                Something went wrong with your signup!
              </Alert>
             )}
-    
-
-        <Form.Group className='mb-3'>
+     {data ? (
+              <p>
+                Success! You may now head{' '}
+                <Link to="/">back to the homepage.</Link>
+              </p>
+            ) : (
+              <>
+              <Form.Group className='mb-3'>
           <Form.Label htmlFor='username'>Username</Form.Label>
           <Form.Control
             type='text'
@@ -101,6 +106,10 @@ const SignupForm = () => {
           variant='success'>
           Submit
         </Button>
+        </>
+            )}
+
+       
       </Form>
     </>
   );
