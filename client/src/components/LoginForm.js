@@ -2,10 +2,11 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import {useMutation} from '@apollo/client'
+import { Link } from 'react-router-dom';
 import{LOGIN_USER} from '../utils/mutations'
 
 
-import { loginUser } from '../utils/API';
+// import { loginUser } from '../utils/API';
 import Auth from '../utils/auth';
 
 const LoginForm = () => {
@@ -21,37 +22,19 @@ const LoginForm = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
-    // check if form has everything (as per react-bootstrap docs)
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
+    console.log(userFormData);
     try {
       const { data } = await login({
         variables: { ...userFormData },
       });
 
-        throw new Error('something went wrong!');
-      
+      Auth.login(data.login.token);
+    } catch (e) {
+      console.error(e);
+    }
 
-    //   const { token, user } = await response.json();
-    //   console.log(user);
-    //   Auth.login(token);
-    // } catch (err) {
-    //   console.error(err);
-    //   setShowAlert(true);
-    // }
-    console.log(data);
-    Auth.login(data.login.token);
-  } catch (e) {
-    console.error(e);
-  }
-
+    // clear form values
     setUserFormData({
-      username: '',
       email: '',
       password: '',
     });
@@ -60,10 +43,19 @@ const LoginForm = () => {
   return (
     <>
       <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
-        <Alert dismissible onClose={() => setShowAlert(false)} show={showAlert} variant='danger'>
-          Something went wrong with your login credentials!
-        </Alert>
-        <Form.Group className='mb-3'>
+        {error && (
+            <Alert dismissible onClose={() => setShowAlert(false)} show={showAlert} variant='danger'>
+            Something went wrong with your login credentials!
+          </Alert>
+        )}
+          {data ? (
+              <p>
+                Success! You may now head{' '}
+                <Link to="/">back to the homepage.</Link>
+              </p>
+            ) : (
+              <>
+              <Form.Group className='mb-3'>
           <Form.Label htmlFor='email'>Email</Form.Label>
           <Form.Control
             type='text'
@@ -94,6 +86,9 @@ const LoginForm = () => {
           variant='success'>
           Submit
         </Button>
+              </>
+            )}
+        
       </Form>
     </>
   );
