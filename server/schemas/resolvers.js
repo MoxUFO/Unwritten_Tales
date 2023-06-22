@@ -34,12 +34,12 @@ const resolvers = {
   
         return { token, user };
       },
-      saveBook: async (parent,{input,bookId,authors,title,description, image},context) => {
-        console.log(bookId + " "  + description+ " "  +authors+ " "  +image+ " "  +title);
+      saveBook: async (parent,{input},context) => {
+        console.log(input.bookId + " "  + input.description+ " "  + input.authors+ " "  +input.image+ " "  +input.title);
       if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
             { _id: context.user._id },
-            { $addToSet: { savedBooks: input } },
+            { $addToSet: { savedBooks: {...input} } },
             { new: true, runValidators: true }
           );
 
