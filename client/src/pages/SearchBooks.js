@@ -78,11 +78,12 @@ const SearchBooks = () => {
 
     try {
       const { data } = saveBook({
-        variables: { ...bookToSave },
+        variables: { ...bookToSave }
       });
 
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
       console.log(data);
+      console.log('=');
     } catch (err) {
       console.error(err);
     }
